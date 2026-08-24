@@ -7,15 +7,16 @@ const authRoutes = require('./routes/auth.routes');
 const searchRoutes = require('./routes/search.routes');
 const demoRoutes = require('./routes/demo.routes');
 const pageRoutes = require('./routes/page.routes');
+const feedbackRoutes = require('./routes/feedback.routes'); // Import route feedback
 
-const app = express();
+const app = express(); // 1. Deklarasi app HARUS di atas sebelum app.use
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
 app.use(express.static('public'));
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // buat baca body dari form HTML biasa
+app.use(express.urlencoded({ extended: true }));
 
 app.use(
   session({
@@ -29,10 +30,12 @@ app.use(
   })
 );
 
+// 2. Pendaftaran semua router
 app.use('/', authRoutes);
 app.use('/', searchRoutes);
 app.use('/', demoRoutes);
 app.use('/', pageRoutes);
+app.use('/', feedbackRoutes); // Pasang router feedback di sini
 
 const PORT = process.env.PORT || 3000;
 
@@ -40,6 +43,10 @@ async function start() {
   try {
     await sequelize.authenticate();
     console.log('Koneksi database berhasil');
+
+    // Sync model feedback bersamaan dengan model sequelize lainnya
+    const Feedback = require('./models/feedback.model');
+    await Feedback.sync();
 
     await sequelize.sync();
     console.log('Sync model selesai');
