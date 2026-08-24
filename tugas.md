@@ -28,7 +28,9 @@
 
 ### 2. Sanitasi Input
 ![Sanitasi Input](./screenshots/sanitasi.png)
-*Penjelasan:* Masukan pengguna disanitasi menggunakan `.trim()` sehingga spasi berlebih di awal dan akhir teks otomatis dipotong sebelum disimpan ke database.
+*Penjelasan:* 
+- **Before:** Input dimasukkan dengan spasi berlebih di awal/akhir (`   Uji coba feedback   `).
+- **After:** Server menjalankan fungsi `.trim()` pada middleware validasi/sanitasi sehingga data tersimpan dan ditampilkan rapi tanpa spasi tambahan (`Uji coba feedback`).
 
 ### 3. Data Di-escape Saat Render (Anti-XSS)
 ![Escape HTML](./screenshots/xss.png)
