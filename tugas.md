@@ -8,11 +8,11 @@
 
 ### 2. XSS Reflected
 ![XSS Reflected](./screenshots/XSS%20Reflected.png)
-*Penjelasan:* Payload `<script>alert(1)</script>` berhasil tereksekusi karena controller langsung mengembalikan input query URL ke dalam respon HTML tanpa melalui proses sanitasi atau escape.
+*Penjelasan:* Payload `<script>alert('XSS dari ' + document.cookie)</script>` pada parameter URL berhasil dieksekusi oleh browser dan menampilkan pop-up bertuliskan "XSS dari" karena controller langsung merender input dari query string ke dalam respon HTML tanpa proses sanitasi/escape.
 
 ### 3. XSS Stored
 ![XSS Stored](./screenshots/XSS%20Stored.png)
-*Penjelasan:* Payload `<script>alert(1)</script>` berhasil tersimpan di database dan tereksekusi setiap kali halaman dimuat karena data ditampilkan menggunakan tag mentah di template engine.
+*Penjelasan:* Payload skrip berbahaya telah tersimpan di database dan otomatis tereksekusi saat halaman pencarian dimuat (menampilkan pop-up "Stored XSS dari nama produk") karena data nama produk dari database ditampilkan menggunakan tag mentah (*raw/unescaped*) tanpa di-escape terlebih dahulu.
 
 ### 4. Escape HTML (Celah Unescaped)
 ![Escape HTML](./screenshots/Escape%20HTML.png)
@@ -32,10 +32,11 @@
 
 ### 3. Data Di-escape Saat Render (Anti-XSS)
 ![Escape HTML](./screenshots/xss.png)
-*Penjelasan:* Payload `<script>alert('xss')</script>` gagal tereksekusi karena EJS menggunakan tag `<%= item.message %>` yang merubah sintaks HTML/JS menjadi entity aman (`&lt;script&gt;`).
+*Penjelasan:* Payload `<script>alert('xss')</script>` gagal tereksekusi dan hanya tampil sebagai teks biasa karena EJS menggunakan tag `<%= item.message %>` yang secara otomatis meng-escape karakter berbahaya menjadi HTML entities (`&lt;script&gt;`).
 
 ### 4. Parameterized Query / ORM
 ![Query ORM](./screenshots/orm.png)
+
 *Penjelasan:* Pembuatan data menggunakan Sequelize ORM (`Feedback.create()`) secara otomatis mengisolasi masukan pengguna sebagai bound parameters sehingga aman dari SQL Injection.
 
 ### 5. Percobaan Serangan Gagal
